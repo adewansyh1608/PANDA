@@ -1,0 +1,145 @@
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+  <!-- Title -->
+  <div class="flex justify-between items-center mb-10">
+    <div>
+      <h2 class="text-3xl font-bold dark:text-white">Riwayat Scan</h2>
+      <p class="text-gray-600 dark:text-gray-400">Daftar lengkap URL yang telah Anda periksa.</p>
+    </div>
+    <div class="inline-flex gap-x-2">
+      <button id="exportCSV" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+        <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="flex flex-col">
+    <div class="-m-1.5 overflow-x-auto">
+      <div class="p-1.5 min-w-full inline-block align-middle">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-slate-900 dark:border-gray-700">
+          <!-- Header -->
+          <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <div class="relative">
+                <input type="text" id="table-search" class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Cari URL...">
+                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3">
+                  <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <select id="statusFilter" class="py-2 px-3 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400">
+                    <option value="all">Semua Status</option>
+                    <option value="safe">Aman</option>
+                    <option value="phishing">Phishing</option>
+                </select>
+            </div>
+          </div>
+          <!-- End Header -->
+
+          <!-- Table -->
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-slate-800">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">URL</th>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Confidence</th>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Sumber</th>
+                <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Waktu</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable" class="divide-y divide-gray-200 dark:divide-gray-700">
+              <!-- Rows will be injected here -->
+            </tbody>
+          </table>
+          <!-- End Table -->
+
+          <!-- Footer -->
+          <div class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-gray-700">
+            <div>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Menampilkan <span class="font-semibold text-gray-800 dark:text-gray-200" id="rowCount">0</span> hasil
+              </p>
+            </div>
+          </div>
+          <!-- End Footer -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let allHistory = [];
+
+async function loadHistory() {
+    try {
+        const response = await fetch('/api/scan/history');
+        const data = await response.json();
+        
+        if (response.ok) {
+            allHistory = data;
+            renderTable(allHistory);
+        }
+    } catch (err) {
+        console.error('Failed to load history:', err);
+    }
+}
+
+function renderTable(data) {
+    const table = document.getElementById('historyTable');
+    const rowCount = document.getElementById('rowCount');
+    
+    rowCount.textContent = data.length;
+    table.innerHTML = data.map(scan => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 truncate max-w-[300px]">${scan.url}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-full text-xs font-medium ${scan.status === 'safe' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    ${scan.status.toUpperCase()}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">${scan.confidence}%</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                <span class="capitalize">${scan.source}</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(scan.scanned_at).toLocaleString()}</td>
+        </tr>
+    `).join('');
+}
+
+document.getElementById('statusFilter').addEventListener('change', (e) => {
+    const filter = e.target.value;
+    if (filter === 'all') {
+        renderTable(allHistory);
+    } else {
+        renderTable(allHistory.filter(h => h.status === filter));
+    }
+});
+
+document.getElementById('table-search').addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    renderTable(allHistory.filter(h => h.url.toLowerCase().includes(query)));
+});
+
+document.getElementById('exportCSV').addEventListener('click', () => {
+    const headers = ['URL', 'Status', 'Confidence', 'Source', 'Scanned At'];
+    const csvContent = [
+        headers.join(','),
+        ...allHistory.map(h => [h.url, h.status, h.confidence, h.source, h.scanned_at].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'scan_history.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+});
+
+loadHistory();
+</script>

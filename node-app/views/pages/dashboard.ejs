@@ -1,0 +1,194 @@
+<style>
+    .glass-card-pro {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    }
+
+    .dark .glass-card-pro {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.1);
+    }
+</style>
+
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative z-10">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
+    <div>
+      <h2 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Dashboard</h2>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Ringkasan aktivitas keamanan sistem Anda secara real-time.</p>
+    </div>
+    <div class="flex gap-2">
+        <a href="/scan" class="py-3 px-6 inline-flex items-center gap-x-2 text-sm font-bold rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all">
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Scan Baru
+        </a>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <!-- Card 1 -->
+    <div class="glass-card-pro stat-card p-6 rounded-3xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Scan</p>
+                <h3 class="text-2xl font-black text-gray-900 dark:text-white" id="totalScanCount">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card-pro stat-card p-6 rounded-3xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-600 dark:text-green-400">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">URL Aman</p>
+                <h3 class="text-2xl font-black text-gray-900 dark:text-white" id="safeCount">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card-pro stat-card p-6 rounded-3xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-600 dark:text-red-400">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Phishing</p>
+                <h3 class="text-2xl font-black text-gray-900 dark:text-white" id="phishingCount">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card-pro stat-card p-6 rounded-3xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Cache Hits</p>
+                <h3 class="text-2xl font-black text-gray-900 dark:text-white" id="cacheHitCount">0</h3>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-8">
+    <!-- Chart -->
+    <div class="lg:col-span-2 glass-card-pro p-8 rounded-3xl min-h-[450px] flex flex-col">
+        <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-8">Statistik Keamanan</h4>
+        <div class="grow relative flex items-center justify-center">
+            <canvas id="scanChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="lg:col-span-3 glass-card-pro p-8 rounded-3xl min-h-[450px] flex flex-col">
+        <div class="flex justify-between items-center mb-8">
+            <h4 class="text-xl font-bold text-gray-900 dark:text-white">Scan Terbaru</h4>
+            <a href="/history" class="text-sm font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                Lihat Semua
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="overflow-x-auto grow">
+            <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-800">
+                <thead>
+                    <tr>
+                        <th class="pb-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">URL</th>
+                        <th class="pb-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                        <th class="pb-4 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Waktu</th>
+                    </tr>
+                </thead>
+                <tbody id="recentScansTable" class="divide-y divide-gray-50 dark:divide-gray-800/50">
+                    <!-- Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+async function loadDashboard() {
+    try {
+        const response = await fetch('/api/dashboard/dashboard');
+        const data = await response.json();
+        
+        if (response.ok) {
+            updateUI(data);
+        }
+    } catch (err) {
+        console.error('Failed to load dashboard:', err);
+    }
+}
+
+function updateUI(data) {
+    const stats = data.stats;
+    const recent = data.recentScans;
+    
+    let safe = 0, phishing = 0, total = 0;
+    stats.forEach(s => {
+        total += parseInt(s.count);
+        if (s.status === 'safe') safe = parseInt(s.count);
+        if (s.status === 'phishing') phishing = parseInt(s.count);
+    });
+
+    document.getElementById('totalScanCount').textContent = total;
+    document.getElementById('safeCount').textContent = safe;
+    document.getElementById('phishingCount').textContent = phishing;
+
+    const ctx = document.getElementById('scanChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Aman', 'Phishing'],
+            datasets: [{
+                data: [safe, phishing],
+                backgroundColor: ['#10b981', '#ef4444'],
+                hoverOffset: 20,
+                borderWidth: 0,
+                borderRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { weight: 'bold' } } }
+            }
+        }
+    });
+
+    const table = document.getElementById('recentScansTable');
+    table.innerHTML = recent.map(scan => `
+        <tr class="group hover:bg-white/40 dark:hover:bg-slate-800/40 transition-all">
+            <td class="py-4 text-sm font-medium text-gray-700 dark:text-gray-300 truncate max-w-[250px]">${scan.url}</td>
+            <td class="py-4">
+                <span class="px-3 py-1 rounded-full text-xs font-bold ${scan.status === 'safe' ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'}">
+                    ${scan.status.toUpperCase()}
+                </span>
+            </td>
+            <td class="py-4 text-sm text-gray-400">${new Date(scan.scanned_at).toLocaleDateString()}</td>
+        </tr>
+    `).join('');
+}
+
+loadDashboard();
+</script>

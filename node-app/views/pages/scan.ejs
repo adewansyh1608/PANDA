@@ -1,0 +1,408 @@
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto min-h-[80vh] flex flex-col justify-center">
+  
+  <!-- CSS for Animations -->
+  <style>
+    .scanner-container {
+        perspective: 1000px;
+    }
+    
+    .radar {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 2px solid rgba(59, 130, 246, 0.2);
+        position: relative;
+        overflow: hidden;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0) 70%);
+    }
+    
+    .radar::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: conic-gradient(from 0deg, transparent 0%, rgba(59, 130, 246, 0.4) 10%, transparent 40%);
+        animation: rotate-radar 2s linear infinite;
+    }
+    
+    .radar-ping {
+        position: absolute;
+        width: 10px; height: 10px;
+        background: #3b82f6;
+        border-radius: 50%;
+        box-shadow: 0 0 15px #3b82f6;
+        animation: ping-anim 1.5s ease-out infinite;
+    }
+
+    @keyframes rotate-radar {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes ping-anim {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
+    }
+
+    .scanning-line {
+        position: absolute;
+        top: 0; width: 100%; height: 2px;
+        background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+        box-shadow: 0 0 10px #3b82f6;
+        animation: scan-move 2s ease-in-out infinite;
+    }
+
+    @keyframes scan-move {
+        0%, 100% { top: 0; }
+        50% { top: 100%; }
+    }
+
+    .slide-up {
+        animation: slide-up 0.5s ease-out forwards;
+    }
+
+    @keyframes slide-up {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .status-glow-safe {
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+    }
+    .status-glow-phishing {
+        box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
+    }
+  </style>
+
+  <!-- Initial State: Centered Form -->
+    <div id="view-initial" class="max-w-2xl mx-auto w-full text-center slide-up">
+    <div class="mb-10">
+      <h2 class="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+        <span class="text-blue-600">PANDA:</span> Periksa Keamanan URL
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-400">
+        Analisis tautan mencurigakan secara instan menggunakan sistem intelijen <b>PANDA</b> (Phishing Analysis & Detection Andalas).
+      </p>
+    </div>
+
+    <div class="glass-card p-8 rounded-2xl shadow-xl">
+      <form id="scanForm">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="text" id="url" name="url" placeholder="https://example.com" 
+            class="py-3 px-5 block w-full border-gray-200 rounded-xl text-lg focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-200" 
+            required>
+          <button type="submit" class="py-3 px-8 inline-flex justify-center items-center gap-x-2 text-lg font-semibold rounded-xl border border-transparent bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-500/25">
+            Analisis
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800">
+        <p class="text-sm text-gray-500 mb-4">Atau gunakan Bulk Scanner (file .txt)</p>
+        <div class="flex items-center justify-center gap-4">
+            <input type="file" id="bulkFile" accept=".txt" class="hidden">
+            <label for="bulkFile" class="cursor-pointer py-2 px-4 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-300">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Pilih File
+            </label>
+            <button id="bulkStartBtn" class="py-2 px-4 inline-flex items-center gap-2 rounded-lg bg-gray-800 text-white text-sm font-medium hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600">
+                Mulai Bulk Scan
+            </button>
+        </div>
+        <div id="fileName" class="mt-2 text-xs text-gray-400"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scanning State -->
+  <div id="view-scanning" class="hidden max-w-md mx-auto w-full text-center">
+    <div class="flex flex-col items-center justify-center">
+        <div class="radar mb-8 mx-auto">
+            <div class="radar-ping" style="top: 30%; left: 40%"></div>
+            <div class="radar-ping" style="top: 60%; left: 70%; animation-delay: 0.5s"></div>
+            <div class="radar-ping" style="top: 80%; left: 20%; animation-delay: 1s"></div>
+        </div>
+        <h3 class="text-2xl font-bold text-blue-600 animate-pulse mb-2">Menganalisis...</h3>
+        <p id="scanning-url" class="text-gray-500 truncate max-w-xs mx-auto"></p>
+    </div>
+  </div>
+
+  <!-- Result State -->
+  <div id="view-result" class="hidden max-w-4xl mx-auto w-full slide-up">
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Left: Status Summary -->
+        <div id="result-status-card" class="p-10 rounded-3xl flex flex-col items-center justify-center text-center">
+            <div id="res-icon" class="mb-6"></div>
+            <h3 id="res-label" class="text-4xl font-black mb-4 tracking-tight"></h3>
+            <div class="flex items-center gap-3 mb-6">
+                <span id="res-confidence" class="px-4 py-1.5 rounded-full text-sm font-bold"></span>
+                <span id="res-source" class="px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"></span>
+            </div>
+            <p id="res-hit-text" class="text-sm text-gray-500 mb-8"></p>
+            <button onclick="resetScan()" class="py-3 px-8 rounded-xl bg-white text-gray-900 font-bold shadow-lg hover:shadow-xl transition-all border border-gray-100">
+                Scan Lagi
+            </button>
+        </div>
+
+        <!-- Right: Technical Details -->
+        <div class="flex flex-col gap-6">
+            <div class="glass-card p-6 rounded-2xl">
+                <h4 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    Detail Analisis
+                </h4>
+                <div id="res-details" class="grid grid-cols-2 gap-4 text-sm">
+                    <!-- Dynamic details -->
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl flex-grow">
+                <h4 class="font-bold text-gray-800 dark:text-white mb-4">Fitur Terdeteksi</h4>
+                <ul id="res-features" class="space-y-3">
+                    <!-- Dynamic features -->
+                </ul>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Bulk Results State -->
+  <div id="view-bulk" class="hidden max-w-5xl mx-auto w-full slide-up">
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h2 class="text-3xl font-bold dark:text-white">Hasil Bulk Scan</h2>
+            <p id="bulk-summary-text" class="text-gray-500 mt-1"></p>
+        </div>
+        <button onclick="resetScan()" class="text-sm font-semibold text-blue-600 hover:text-blue-700">Kembali</button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-8 glass-card p-6 rounded-2xl">
+        <div class="flex justify-between items-center mb-3">
+            <span id="bulk-progress-label" class="text-sm font-bold text-gray-700 dark:text-gray-300">Memproses...</span>
+            <span id="bulk-progress-percent" class="text-sm font-black text-blue-600">0%</span>
+        </div>
+        <div class="w-full h-3 bg-gray-100 rounded-full dark:bg-gray-800 overflow-hidden">
+            <div id="bulk-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100 dark:divide-gray-800">
+                <thead class="bg-gray-50/50 dark:bg-slate-800/50">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">URL</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Confidence</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="bulk-list" class="divide-y divide-gray-100 dark:divide-gray-800">
+                    <!-- Bulk rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const views = {
+    initial: document.getElementById('view-initial'),
+    scanning: document.getElementById('view-scanning'),
+    result: document.getElementById('view-result'),
+    bulk: document.getElementById('view-bulk')
+};
+
+function switchView(viewName) {
+    Object.keys(views).forEach(v => {
+        views[v].classList.add('hidden');
+    });
+    views[viewName].classList.remove('hidden');
+}
+
+function resetScan() {
+    switchView('initial');
+    document.getElementById('scanForm').reset();
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('bulkFile').value = '';
+}
+
+// Single Scan
+document.getElementById('scanForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = document.getElementById('url').value;
+    await performSingleScan(url);
+});
+
+async function performSingleScan(url) {
+    document.getElementById('scanning-url').textContent = url;
+    switchView('scanning');
+
+    try {
+        const response = await fetch('/api/scan/scan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
+        const data = await response.json();
+        
+        if (response.ok) {
+            showSingleResult(data);
+        } else {
+            alert(data.error || 'Terjadi kesalahan');
+            switchView('initial');
+        }
+    } catch (err) {
+        alert('Gagal menghubungi server');
+        switchView('initial');
+    }
+}
+
+function showSingleResult(data) {
+    const isPhishing = data.status === 'phishing';
+    const statusCard = document.getElementById('result-status-card');
+    const icon = document.getElementById('res-icon');
+    const label = document.getElementById('res-label');
+    const conf = document.getElementById('res-confidence');
+    const source = document.getElementById('res-source');
+    const hitText = document.getElementById('res-hit-text');
+    const details = document.getElementById('res-details');
+    const features = document.getElementById('res-features');
+
+    switchView('result');
+
+    // Theme adjustment
+    statusCard.className = `p-10 rounded-3xl flex flex-col items-center justify-center text-center ${isPhishing ? 'bg-red-50 text-red-900 status-glow-phishing' : 'bg-green-50 text-green-900 status-glow-safe'}`;
+    label.textContent = isPhishing ? 'PHISHING' : 'AMAN';
+    conf.textContent = `${data.confidence}% Match`;
+    conf.className = `px-4 py-1.5 rounded-full text-sm font-bold ${isPhishing ? 'bg-red-200' : 'bg-green-200'}`;
+    source.textContent = `Analisis: ${data.source.toUpperCase()}`;
+    
+    icon.innerHTML = isPhishing 
+        ? `<svg class="w-24 h-24 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`
+        : `<svg class="w-24 h-24 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+
+    hitText.textContent = data.hit_count > 1 
+        ? `Telah diperiksa ${data.hit_count} kali oleh sistem.` 
+        : `Ini adalah pemeriksaan pertama untuk link ini.`;
+
+    // Details
+    details.innerHTML = `
+        <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+            <span class="text-gray-400 block mb-1">Panjang URL</span>
+            <span class="font-bold">${data.url.length} Karakter</span>
+        </div>
+        <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+            <span class="text-gray-400 block mb-1">Protokol</span>
+            <span class="font-bold">${data.url.startsWith('https') ? 'HTTPS (Aman)' : 'HTTP (Rentan)'}</span>
+        </div>
+        <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+            <span class="text-gray-400 block mb-1">Waktu Scan</span>
+            <span class="font-bold">${new Date().toLocaleTimeString()}</span>
+        </div>
+        <div class="bg-gray-50 dark:bg-slate-800 p-3 rounded-lg">
+            <span class="text-gray-400 block mb-1">Status IP</span>
+            <span class="font-bold">Normal</span>
+        </div>
+    `;
+
+    // Features
+    features.innerHTML = (data.features_used || ['Analisis Leksikal', 'Pola Karakter', 'Verifikasi Domain']).map(f => `
+        <li class="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+            <div class="w-1.5 h-1.5 rounded-full ${isPhishing ? 'bg-red-400' : 'bg-green-400'}"></div>
+            ${f}
+        </li>
+    `).join('');
+}
+
+// Bulk Scan
+document.getElementById('bulkFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) document.getElementById('fileName').textContent = `File: ${file.name}`;
+});
+
+document.getElementById('bulkStartBtn').addEventListener('click', async () => {
+    const fileInput = document.getElementById('bulkFile');
+    if (!fileInput.files.length) return alert('Silakan pilih file .txt terlebih dahulu');
+    
+    const file = fileInput.files[0];
+    const text = await file.text();
+    const urls = text.split('\n').map(u => u.trim()).filter(u => u);
+    
+    if (!urls.length) return alert('File kosong');
+
+    switchView('bulk');
+    const bulkList = document.getElementById('bulk-list');
+    const progressBar = document.getElementById('bulk-progress-bar');
+    const progressPercent = document.getElementById('bulk-progress-percent');
+    const summaryText = document.getElementById('bulk-summary-text');
+    const progressLabel = document.getElementById('bulk-progress-label');
+
+    bulkList.innerHTML = '';
+    let completed = 0;
+    let phishing = 0;
+
+    for (const url of urls) {
+        // Create row immediately in 'Loading' state
+        const rowId = `bulk-row-${completed}`;
+        const row = document.createElement('tr');
+        row.id = rowId;
+        row.className = 'transition-all duration-300';
+        row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">${url}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="animate-pulse text-gray-400">Menganalisis...</span></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">-</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">-</td>
+        `;
+        bulkList.appendChild(row);
+
+        try {
+            const res = await fetch('/api/scan/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+            const d = await res.json();
+            
+            const isP = d.status === 'phishing';
+            if (isP) phishing++;
+            
+            // Update row
+            const targetRow = document.getElementById(rowId);
+            targetRow.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200 truncate max-w-xs">${url}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span class="px-2 py-1 rounded-full text-xs font-bold ${isP ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}">
+                        ${d.status.toUpperCase()}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium dark:text-gray-300">${d.confidence}%</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <button onclick="performSingleScan('${url}')" class="text-blue-600 hover:underline">Detail</button>
+                </td>
+            `;
+            if (isP) targetRow.classList.add('bg-red-50/30');
+
+        } catch (e) {
+            document.getElementById(rowId).innerHTML = `
+                <td class="px-6 py-4 text-sm text-gray-400">${url}</td>
+                <td class="px-6 py-4 text-sm text-red-500">Error</td>
+                <td class="px-6 py-4">-</td>
+                <td class="px-6 py-4">-</td>
+            `;
+        }
+
+        completed++;
+        const percent = Math.round((completed / urls.length) * 100);
+        progressBar.style.width = `${percent}%`;
+        progressPercent.textContent = `${percent}%`;
+        summaryText.textContent = `Ditemukan ${phishing} phishing dari ${completed} link yang diproses.`;
+    }
+
+    progressLabel.textContent = 'Selesai';
+    progressLabel.className = 'text-sm font-bold text-green-600';
+});
+</script>

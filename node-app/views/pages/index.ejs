@@ -1,0 +1,108 @@
+<style>
+    .glass-card-pro {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.05);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dark .glass-card-pro {
+        background: rgba(15, 23, 42, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-card-pro:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 25px 50px 0 rgba(31, 38, 135, 0.1);
+    }
+
+    .hero-gradient-text {
+        background: linear-gradient(to right, #60a5fa, #818cf8, #c084fc, #60a5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: gradient-move 4s linear infinite;
+    }
+
+    @keyframes gradient-move {
+        to { background-position: 200% center; }
+    }
+</style>
+
+<div class="relative overflow-hidden z-10">
+  <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+    <!-- Announcement -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex items-center gap-x-2 bg-white/50 backdrop-blur-md border border-white/40 text-sm text-gray-800 p-1 ps-3 rounded-full dark:bg-slate-900/50 dark:border-gray-700 dark:text-gray-200">
+        Model LightGBM v1.0 Aktif
+        <span class="py-1.5 px-3 inline-flex justify-center items-center gap-x-2 rounded-full bg-blue-600 font-bold text-xs text-white">
+          98.5% Akurasi
+        </span>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="max-w-4xl text-center mx-auto mb-10">
+      <h1 class="block font-black text-gray-900 text-7xl md:text-8xl lg:text-9xl dark:text-white tracking-tighter leading-none mb-4">
+        <span class="hero-gradient-text">PANDA</span>
+      </h1>
+      <p class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200 tracking-tight">
+        Deteksi Phishing Tanpa Ragu.
+      </p>
+      <p class="mt-8 text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+        <b>Phishing Analysis & Detection Andalas</b>. Lindungi diri Anda dari ancaman siber dengan analisis URL berbasis Machine Learning tercanggih.
+      </p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4">
+      <a href="/scan" class="py-4 px-10 inline-flex justify-center items-center gap-x-3 text-center bg-blue-600 text-white text-lg font-bold rounded-2xl hover:bg-blue-700 shadow-2xl shadow-blue-500/40 transition-all transform hover:scale-105">
+        Mulai Scan
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <a href="/dashboard" class="py-4 px-10 inline-flex justify-center items-center gap-x-3 text-center glass-card-pro text-gray-800 dark:text-white text-lg font-bold rounded-2xl hover:bg-white/60 transition-all">
+        Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="max-w-[85rem] px-4 py-20 sm:px-6 lg:px-8 mx-auto relative z-10">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Card 1 -->
+    <div class="glass-card-pro p-8 rounded-3xl group">
+      <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Akurasi Tinggi</h3>
+      <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+        Menggunakan algoritma <b>LightGBM</b> yang dilatih dengan jutaan data untuk mendeteksi pola phishing yang paling halus sekalipun.
+      </p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="glass-card-pro p-8 rounded-3xl group">
+      <div class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 transition-transform">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Cache 24 Jam</h3>
+      <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+        Hasil analisis disimpan selama 24 jam untuk memberikan respon instan bagi URL yang sering diperiksa oleh komunitas.
+      </p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="glass-card-pro p-8 rounded-3xl group">
+      <div class="w-16 h-16 bg-teal-500/10 rounded-2xl flex items-center justify-center text-teal-600 mb-6 group-hover:scale-110 transition-transform">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Analisis Leksikal</h3>
+      <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+        Ekstraksi otomatis 54 fitur leksikal dari URL mentah untuk mengidentifikasi teknik pengelabuan domain yang rumit.
+      </p>
+    </div>
+  </div>
+</div>

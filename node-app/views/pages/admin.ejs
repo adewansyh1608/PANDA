@@ -1,0 +1,62 @@
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+  <!-- Title -->
+  <div class="mb-10">
+    <h2 class="text-3xl font-bold dark:text-white">Admin Panel</h2>
+    <p class="text-gray-600 dark:text-gray-400">Statistik sistem global dan manajemen pengguna.</p>
+  </div>
+
+  <!-- Global Stats -->
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10">
+    <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+            <p class="text-xs uppercase tracking-wide text-gray-500">Global Scans</p>
+        </div>
+        <div class="mt-1 flex items-center gap-x-2">
+            <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200" id="adminTotalScans">0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+            <p class="text-xs uppercase tracking-wide text-gray-500">Phishing Detected</p>
+        </div>
+        <div class="mt-1 flex items-center gap-x-2">
+            <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200" id="adminPhishingFound">0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-slate-900 dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+            <p class="text-xs uppercase tracking-wide text-gray-500">Cache Hit Rate</p>
+        </div>
+        <div class="mt-1 flex items-center gap-x-2">
+            <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200" id="adminCacheRate">0%</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+async function loadAdminData() {
+    try {
+        const statsRes = await fetch('/api/admin/admin/stats');
+        const statsData = await statsRes.json();
+        
+        if (statsRes.ok) {
+            document.getElementById('adminTotalScans').textContent = statsData.totalScans;
+            document.getElementById('adminPhishingFound').textContent = statsData.phishingFound;
+            document.getElementById('adminCacheRate').textContent = statsData.cacheHitRate + '%';
+        }
+    } catch (err) {
+        console.error('Failed to load admin data:', err);
+    }
+}
+
+loadAdminData();
+</script>

@@ -1,0 +1,24 @@
+=== RINGKASAN EVALUASI MODEL LIGHTGBM ===
+Dataset     : PhiUSIIL Phishing URL Dataset
+Total Data  : 235,795 baris
+Fitur Awal  : 50
+Fitur Pakai : 40 (SelectKBest k=40)
+Train/Test  : 80% / 20%
+
+--- Metrik (Data Test) ---
+Accuracy  : 1.0000 (100.00%)
+Precision : 1.0000 (100.00%)
+Recall    : 1.0000 (100.00%)
+F1-Score  : 1.0000 (100.00%)
+ROC-AUC   : 1.0000 (100.00%)
+
+--- Confusion Matrix ---
+TN=20,189  FP=0
+FN=0  TP=26,970
+
+--- Parameter LightGBM ---
+n_estimators     : 500
+learning_rate    : 0.05
+max_depth        : 8
+num_leaves       : 63
+best_iteration   : 500
