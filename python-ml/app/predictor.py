@@ -19,12 +19,39 @@ except Exception as e:
     scaler = None
     selected_features = []
 
+# Trusted Domains Whitelist to prevent false positives on major sites
+TRUSTED_DOMAINS = {
+    'google.com', 'google.co.id', 'youtube.com', 'youtu.be', 'yahoo.com', 
+    'facebook.com', 'twitter.com', 'instagram.com', 'linkedin.com', 
+    'github.com', 'microsoft.com', 'apple.com', 'netflix.com', 
+    'wikipedia.org', 'cloudflare.com', 'zoom.us', 'whatsapp.com', 
+    'spotify.com', 'reddit.com', 'pinterest.com', 'amazon.com', 
+    'tiktok.com', 'canva.com', 'githubusercontent.com', 'medium.com'
+}
+
 def predict(url: str) -> dict:
     """
     Extracts features from URL, scales them, and predicts phishing/safe.
     """
     if model is None or scaler is None:
         return {"error": "Model not loaded"}
+
+    # 0. Check Whitelist
+    try:
+        import tldextract
+        ext = tldextract.extract(url)
+        registered_domain = f"{ext.domain}.{ext.suffix}".lower()
+        if registered_domain in TRUSTED_DOMAINS:
+            return {
+                "url": url,
+                "label": 1, # Safe
+                "confidence": 100.0,
+                "status": "safe",
+                "features_used": ["URL is a trusted domain (whitelisted)"],
+                "raw_features": {}
+            }
+    except Exception as e:
+        print(f"Error checking whitelist: {e}")
 
     # 1. Extract features
     raw_features = extract_features(url)
@@ -45,15 +72,15 @@ def predict(url: str) -> dict:
     # 4. Predict
     # predict_proba for confidence
     probs = model.predict_proba(x_scaled)[0]
-    label = int(np.argmax(probs)) # 0 = safe, 1 = phishing (assuming PhiUSIIL labels)
+    label = int(np.argmax(probs)) # 1 = safe, 0 = phishing (PhiUSIIL labels)
     confidence = float(np.max(probs))
     
-    status = "phishing" if label == 1 else "safe"
+    status = "safe" if label == 1 else "phishing"
     
     # Find top contributing features (approximate by looking at high values in scaled data)
     # Or just return the most 'suspicious' lexical features
     suspicious_features = []
-    if label == 1:
+    if label == 0:
         # Example of identifying features that contributed
         # For simplicity, we'll return some interesting ones
         if raw_features.get('NoOfOtherSpecialCharsInURL', 0) > 5:
@@ -70,6 +97,6 @@ def predict(url: str) -> dict:
         "label": label,
         "confidence": round(confidence * 100, 2),
         "status": status,
-        "features_used": suspicious_features if label == 1 else ["URL appears standard"],
+        "features_used": suspicious_features if label == 0 else ["URL appears standard"],
         "raw_features": {k: raw_features[k] for k in selected_features[:10]} # Summary of top 10 features
     }
