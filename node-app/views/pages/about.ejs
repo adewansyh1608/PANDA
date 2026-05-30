@@ -1,0 +1,141 @@
+<style>
+    .glass-card-pro {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.05);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dark .glass-card-pro {
+        background: rgba(15, 23, 42, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-card-pro:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 25px 50px 0 rgba(31, 38, 135, 0.1);
+    }
+
+    .hero-gradient-text {
+        background: linear-gradient(to right, #60a5fa, #818cf8, #c084fc, #60a5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: gradient-move 4s linear infinite;
+    }
+
+    @keyframes gradient-move {
+        to { background-position: 200% center; }
+    }
+</style>
+
+<div class="relative overflow-hidden z-10">
+  <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+    <!-- Header -->
+    <div class="max-w-4xl text-center mx-auto mb-16">
+      <h1 class="block font-black text-gray-900 text-5xl md:text-6xl dark:text-white tracking-tighter leading-none mb-4">
+        Meet Our <span class="hero-gradient-text">Team</span>
+      </h1>
+      <p class="text-xl font-bold text-gray-800 dark:text-gray-200 tracking-tight mb-2">
+        Kelompok 01 &bull; Kelas A
+      </p>
+      <div class="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto rounded-full mb-6"></div>
+      
+      <!-- Project Title Card -->
+      <div class="glass-card-pro p-6 rounded-2xl mb-8 max-w-3xl mx-auto border border-blue-500/20 shadow-lg text-left md:text-center">
+        <span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-bold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 mb-3">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Judul Proyek
+        </span>
+        <h2 class="text-lg md:text-xl font-extrabold text-gray-900 dark:text-white leading-snug">
+          "Implementasi Machine Learning untuk Pendeteksian Tautan Penipuan (Phishing) Menggunakan Algoritma LightGBM Berbasis Website Sebagai Solusi Pencegahan Penipuan Siber di Lingkungan Universitas Andalas"
+        </h2>
+      </div>
+
+      <p class="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+        Kami adalah tim mahasiswa Sistem Informasi Universitas Andalas yang berkolaborasi dalam merancang dan membangun platform <b>PANDA</b> sebagai bagian dari solusi pencegahan ancaman kejahatan siber di kampus.
+      </p>
+    </div>
+
+    <!-- Team Members Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      
+      <!-- Member 1: Andre -->
+      <div class="glass-card-pro p-6 rounded-3xl text-center group flex flex-col items-center">
+        <div class="relative w-36 h-36 mb-6">
+          <!-- Background Glow ring -->
+          <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-75 blur-md transition-opacity duration-500"></div>
+          <!-- Image Wrapper -->
+          <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-105 transition-transform duration-500 ease-in-out">
+            <img src="/andre.png" alt="Andre Putra Dewansyah" class="w-full h-full object-cover">
+          </div>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-blue-500 transition-colors">
+          Andre Putra Dewansyah
+        </h3>
+        <p class="text-sm font-medium text-blue-600 dark:text-blue-400">
+          NIM 2311523001
+        </p>
+      </div>
+
+      <!-- Member 2: Fajri -->
+      <div class="glass-card-pro p-6 rounded-3xl text-center group flex flex-col items-center">
+        <div class="relative w-36 h-36 mb-6">
+          <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-75 blur-md transition-opacity duration-500"></div>
+          <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-105 transition-transform duration-500 ease-in-out">
+            <img src="/fajri.png" alt="Muhammad Fajri" class="w-full h-full object-cover">
+          </div>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-indigo-500 transition-colors">
+          Muhammad Fajri
+        </h3>
+        <p class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+          NIM 2311522015
+        </p>
+      </div>
+
+      <!-- Member 3: Nurul -->
+      <div class="glass-card-pro p-6 rounded-3xl text-center group flex flex-col items-center">
+        <div class="relative w-36 h-36 mb-6">
+          <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-pink-500 to-purple-500 opacity-0 group-hover:opacity-75 blur-md transition-opacity duration-500"></div>
+          <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-105 transition-transform duration-500 ease-in-out">
+            <img src="/nurul.jpg" alt="Nurul Aini" class="w-full h-full object-cover" style="object-position: 50% 15%; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; backface-visibility: hidden;">
+          </div>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-pink-500 transition-colors">
+          Nurul Aini
+        </h3>
+        <p class="text-sm font-medium text-pink-600 dark:text-pink-400">
+          NIM 2311521013
+        </p>
+      </div>
+
+      <!-- Member 4: Velisa -->
+      <div class="glass-card-pro p-6 rounded-3xl text-center group flex flex-col items-center">
+        <div class="relative w-36 h-36 mb-6">
+          <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-500 opacity-0 group-hover:opacity-75 blur-md transition-opacity duration-500"></div>
+          <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-105 transition-transform duration-500 ease-in-out">
+            <img src="/velisa.png" alt="Velisa Dwi Sonia" class="w-full h-full object-cover">
+          </div>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-teal-500 transition-colors">
+          Velisa Dwi Sonia
+        </h3>
+        <p class="text-sm font-medium text-teal-600 dark:text-teal-400">
+          NIM 2311522039
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Back to Home Button -->
+    <div class="flex justify-center mt-16">
+      <a href="/" class="py-3.5 px-8 inline-flex justify-center items-center gap-x-2 text-center bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-500/20 transition-all transform hover:scale-105">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Kembali ke Beranda
+      </a>
+    </div>
+  </div>
+</div>

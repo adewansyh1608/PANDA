@@ -41,6 +41,7 @@ app.get('/dashboard', (req, res) => res.render('pages/dashboard', { title: 'Dash
 app.get('/scan', (req, res) => res.render('pages/scan', { title: 'Scan' }));
 app.get('/history', (req, res) => res.render('pages/history', { title: 'History' }));
 app.get('/admin', (req, res) => res.render('pages/admin', { title: 'Admin' }));
+app.get('/about', (req, res) => res.render('pages/about', { title: 'About Us' }));
 
 // Database Sync & Start Server
 const PORT = process.env.PORT || 3000;
