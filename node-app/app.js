@@ -47,9 +47,11 @@ app.get('/about', (req, res) => res.render('pages/about', { title: 'About Us' })
 const PORT = process.env.PORT || 3000;
 
 syncDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
+    if (process.env.NODE_ENV !== 'test') {
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    }
 });
 
 module.exports = app;
