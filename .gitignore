@@ -11,3 +11,7 @@ build/
 
 # Ignore specific progress report PDF
 PROGRESS REPORT 3 _Kelompok 3_APM B.pdf
+
+# Ignore scratch directory
+scratch/
+

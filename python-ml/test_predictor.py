@@ -28,7 +28,7 @@ def test_url(url):
     x_scaled_df = pd.DataFrame(x_scaled, columns=selected_features)
     
     probs = model.predict_proba(x_scaled_df)[0]
-    print(f"Probabilities: Benign (Safe, 1): {probs[1]:.4f}, Phishing (0): {probs[0]:.4f}")
+    print(f"Probabilities: Phishing (0): {probs[0]:.4f}, Benign (Safe, 1): {probs[1]:.4f}")
     
     # Print the top 5 scaled features to inspect what might be causing the classification
     scaled_dict = x_scaled_df.iloc[0].to_dict()

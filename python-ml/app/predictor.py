@@ -44,7 +44,7 @@ def predict(url: str) -> dict:
         if registered_domain in TRUSTED_DOMAINS:
             return {
                 "url": url,
-                "label": 1, # Safe
+                "label": 1, # Safe (Benign)
                 "confidence": 100.0,
                 "status": "safe",
                 "features_used": ["URL is a trusted domain (whitelisted)"],
@@ -64,15 +64,19 @@ def predict(url: str) -> dict:
     # Convert to numeric (ensure no strings/None)
     feature_values = [float(v) if v is not None else 0.0 for v in feature_values]
     
-    x = np.array(feature_values).reshape(1, -1)
+    # Convert to DataFrame to match feature names and avoid scikit-learn warnings
+    x_df = pd.DataFrame([feature_values], columns=selected_features)
     
     # 3. Scale features
-    x_scaled = scaler.transform(x)
+    x_scaled = scaler.transform(x_df)
+    
+    # Convert scaled features back to DataFrame to preserve feature names for LightGBM
+    x_scaled_df = pd.DataFrame(x_scaled, columns=selected_features)
     
     # 4. Predict
     # predict_proba for confidence
-    probs = model.predict_proba(x_scaled)[0]
-    label = int(np.argmax(probs)) # 1 = safe, 0 = phishing (PhiUSIIL labels)
+    probs = model.predict_proba(x_scaled_df)[0]
+    label = int(np.argmax(probs)) # 0 = phishing, 1 = safe (original PhiUSIIL labels)
     confidence = float(np.max(probs))
     
     status = "safe" if label == 1 else "phishing"

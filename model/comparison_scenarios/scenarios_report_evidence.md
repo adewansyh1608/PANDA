@@ -5,7 +5,7 @@ Laporan ini menyajikan hasil pembandingan performa 3 algoritma utama yang diguna
 2. **Random Forest** (Baseline Ensemble - Bagging)
 3. **LightGBM** (Model Boosting Utama - Gradient Boosting)
 
-Eksperimen dijalankan secara jujur menggunakan data asli dari **PhiUSIIL Phishing URL Dataset** (Sampel ukuran: 30000 baris).
+Eksperimen dijalankan secara jujur menggunakan data asli dari **PhiUSIIL Phishing URL Dataset** (Sampel ukuran: 50000 baris).
 
 ---
 
@@ -13,9 +13,9 @@ Eksperimen dijalankan secara jujur menggunakan data asli dari **PhiUSIIL Phishin
 
 | Model | Rata-rata Akurasi | Rata-rata F1-Score | Rata-rata Waktu Training |
 |---|---|---|---|
-| **Logistic Regression** | 99.7632% | 99.7931% | 0.0484s |
-| **Random Forest** | 99.8500% | 99.8690% | 0.2122s |
-| **LightGBM** | 99.8319% | 99.8532% | 0.3138s |
+| **Logistic Regression** | 99.7854% | 99.8124% | 0.0570s |
+| **Random Forest** | 99.9387% | 99.9464% | 0.2805s |
+| **LightGBM** | 99.9579% | 99.9632% | 0.3562s |
 
 ---
 

@@ -22,7 +22,7 @@ df = pd.read_csv(CSV_PATH)
 print(f'Shape dataset: {df.shape}')
 print(f'Jumlah kolom : {df.shape[1]}')
 
-# Distribusi Label Target (0 = Safe/Benign, 1 = Phishing)
+# Distribusi Label Target (0 = Phishing, 1 = Safe/Benign)
 print('\nDistribusi Label:')
 print(df['label'].value_counts())
 ```
@@ -31,8 +31,8 @@ print(df['label'].value_counts())
 
 | Kategori Label | Jumlah Baris | Persentase (%) | Keterangan |
 | :--- | :--- | :--- | :--- |
-| **Phishing (1)** | 134.850 | 57,2% | URL Phishing / Berbahaya |
-| **Safe / Benign (0)** | 100.945 | 42,8% | URL Legitimasi / Aman |
+| **Aman / Benign (1)** | 134.850 | 57,2% | URL Legitimasi / Aman |
+| **Phishing (0)** | 100.945 | 42,8% | URL Phishing / Berbahaya |
 | **Total** | **235.795** | **100%** | |
 
 Hasil distribusi ini divisualisasikan dalam bentuk bar chart sebagai berikut:
@@ -54,8 +54,8 @@ ratio = counts[1] / counts[0]
 
 print("=== ANALISIS CLASS IMBALANCE ===")
 print("=" * 45)
-print(f"Kelas terbanyak  : Phishing (1) dengan {counts[1]:,} baris")
-print(f"Kelas tersedikit : Safe/Benign (0) dengan {counts[0]:,} baris")
+print(f"Kelas terbanyak  : Aman/Benign (1) dengan {counts[1]:,} baris")
+print(f"Kelas tersedikit : Phishing (0) dengan {counts[0]:,} baris")
 print(f"Rasio imbalance  : {ratio:.2f}x")
 print(f"Rata-rata data   : {df.shape[0] / 2:.0f} baris per kelas")
 print("=" * 45)
@@ -127,7 +127,7 @@ DROP_COLS = [
     'URLSimilarityIndex', 'TLDLegitimateProb', 'URLCharProb'
 ]
 X = df.drop(columns=DROP_COLS, errors='ignore')
-y = df['label'] # 0 = Safe/Benign, 1 = Phishing
+y = df['label'] # 0 = Phishing, 1 = Safe/Benign
 
 # Train-Test Split (80/20) Stratified
 SEED = 42
@@ -271,12 +271,12 @@ cm = confusion_matrix(y_test, y_pred)
 TN, FP, FN, TP = cm.ravel()
 ```
 
-**Tabel Hasil Confusion Matrix (0 = Safe/Benign, 1 = Phishing):**
+**Tabel Hasil Confusion Matrix (0 = Phishing, 1 = Safe/Benign):**
 
-| | Predicted Safe (0) | Predicted Phishing (1) |
+| | Predicted Phishing (0) | Predicted Safe (1) |
 | :--- | :--- | :--- |
-| **Actual Safe (0)** | **TN = 20.186** *(True Safe)* | **FP = 3** *(False Phishing)* |
-| **Actual Phishing (1)** | **FN = 0** *(False Safe)* | **TP = 26.970** *(True Phishing)* |
+| **Actual Phishing (0)** | **TN = 20.186** *(True Phishing)* | **FP = 3** *(False Safe)* |
+| **Actual Safe (1)** | **FN = 0** *(False Phishing)* | **TP = 26.970** *(True Safe)* |
 
 ![Confusion Matrix](./model/confusion_matrix.png)
 *Gambar 3.1: Confusion Matrix Hasil Prediksi Model LightGBM*
@@ -307,12 +307,12 @@ Dalam pemodelan deteksi Phishing URL, **Akurasi murni (Accuracy) tidak pernah cu
 Berikut adalah rasio dan justifikasi ilmiah pemilihan metrik tersebut berdasarkan konteks nyata ancaman keamanan siber (*cybersecurity*):
 
 1. **Dampak Fatal Kesalahan False Positive (FP):**
-   * **Definisi FP di sini**: Situs Phishing (1) secara salah diprediksi sebagai Situs Aman (0).
+   * **Definisi FP di sini**: Situs Phishing (0) secara salah diprediksi sebagai Situs Aman (1).
    * **Dampak Riil**: Jika situs phishing dianggap aman oleh model, pengguna akan diizinkan mengakses situs tersebut secara normal, lalu dengan percaya diri memasukkan informasi kredensial sensitif mereka (seperti username, password, atau PIN bank). Hal ini memicu **kebocoran data krusial, pencurian identitas, hingga kerugian finansial yang parah**. Ini adalah kesalahan klasifikasi **paling berbahaya** dalam domain keamanan siber.
    * **Peran Precision**: Metrik Precision dirancang khusus untuk meminimalkan nilai False Positive (FP) ini. Dengan skor Precision LightGBM sebesar **99,99%** (hanya 3 situs phishing yang lolos dari 20.189 sampel phishing), model kami terbukti sangat andal dalam memblokir ancaman dan memberikan perlindungan maksimal bagi pengguna.
 
 2. **Dampak Minimal Kesalahan False Negative (FN):**
-   * **Definisi FN di sini**: Situs Aman (0) secara salah diprediksi sebagai Situs Phishing (1).
+   * **Definisi FN di sini**: Situs Aman (1) secara salah diprediksi sebagai Situs Phishing (0).
    * **Dampak Riil**: Pengguna akan diblokir dari mengakses situs web yang sebenarnya sah dan bersih (false alarm). Ini hanya akan menimbulkan **sedikit ketidaknyamanan operasional/frustrasi pengguna**, tetapi **tidak menimbulkan ancaman keamanan sama sekali**.
    * **Peran Recall**: Recall meminimalkan False Negative (FN). Skor Recall model kami mencapai **100,00%** (0 False Negatives dari 26.970 sampel aman).
 
